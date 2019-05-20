@@ -5,10 +5,24 @@ from conllu.parser import parse_token_and_metadata
 
 
 def parse(data, fields=None, field_parsers=None):
+    '''
+    Here we assume a multiple sentence conll files conll files, however since we are handling single sentence conll files,
+    we shall assume so, unless stated otherwise. For this we shall define a new function parse_single
+    '''
     return [
         TokenList(*parse_token_and_metadata(sentence, fields=fields, field_parsers=field_parsers))
-        for sentence in data.split("\n\n")
+        for sentence in data.read()
         if sentence
+    ]
+
+
+def parse_single(data, fields=None, field_parsers=None):
+    '''
+    parse single is the function which shall handle single conll sentence files.
+    '''
+    l = data.read()
+    return [
+        TokenList(*parse_token_and_metadata(l, fields=fields, field_parsers=field_parsers))
     ]
 
 def parse_incr(in_file, fields=None, field_parsers=None):
