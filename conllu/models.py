@@ -1,9 +1,12 @@
 from __future__ import print_function, unicode_literals
 
+from collections import OrderedDict
+import re
+
 from conllu.compat import text
 from conllu.parser import ParseException, head_to_token, serialize
 
-DEFAULT_EXCLUDE_FIELDS = ('id', 'deprel', 'xpostag', 'feats', 'head', 'deps', 'misc')
+DEFAULT_EXCLUDE_FIELDS = ('id', 'deprel', 'feats', 'head', 'deps', 'misc')
 
 
 class TokenList(list):
@@ -44,6 +47,34 @@ class TokenList(list):
                 self.metadata.update(iterable.metadata)
             else:
                 self.metadata = [self.metadata, iterable.metadata]
+
+    def get_noun_chunks(self):
+        NP = ['NN', 'NNS', 'NNP', 'NNPS']
+        if len(self) > 0 and isinstance(self[0], OrderedDict):
+            annotated_sentence = list()
+            for word in self:
+                annotated_sentence.append("{}_{}".format(word['xpostag'], word['form']))
+            flag = 0
+            noun_chunks = []
+            stack = []
+            for i in annotated_sentence:
+                matches = re.search(r'([A-Z]+)_(\w+)', i)
+                if matches and matches.group(1) in NP:
+                    if flag == 0:
+                        flag = 1
+                    stack.append(matches.group(2))
+                else:
+                    if flag == 1:
+                        noun_chunks.append('_'.join(['NP'] + stack))
+                        stack = []
+                        flag = 0
+                    try:
+                        noun_chunks.append(matches.group(2))
+                    except:
+                        noun_chunks.append('.')
+            return ' '.join(noun_chunks)
+        else:
+            raise ParseException("Can't create noun chuncks for a group of sentences")
 
     @property
     def tokens(self):
