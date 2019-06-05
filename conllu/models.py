@@ -58,7 +58,7 @@ class TokenList(list):
             noun_chunks = []
             stack = []
             for i in annotated_sentence:
-                matches = re.search(r'([A-Z]+)_(\w+)', i)
+                matches = re.search(r'(\w+)_([\w.,]+)', i)
                 if matches and matches.group(1) in NP:
                     if flag == 0:
                         flag = 1
@@ -69,6 +69,7 @@ class TokenList(list):
                         stack = []
                         flag = 0
                     try:
+
                         noun_chunks.append(matches.group(2))
                     except:
                         noun_chunks.append('.')
