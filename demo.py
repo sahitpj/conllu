@@ -33,13 +33,13 @@ onlyfiles = [f for f in listdir(conll_data_path) if isfile(join(conll_data_path,
 h = HearstPatterns()
 count = 0 
 results = open('test.txt', 'w')
-for conll_file in onlyfiles[:]:
+for conll_file in onlyfiles:
     # data_file = open(conll_data_path + conll_file, "r", encoding="utf-8")
     # tokenList = parse_single(data_file)
     # sentence_tokenList = tokenList[0]
     # # print(conll_data_path + conll_file)
     # print(sentence_tokenList.get_noun_chunks())
-    count += 1
+    # count += 1
     try:
         hearst_patterns = h.find_hearstpatterns(conll_data_path + conll_file)
         # print(hearst_patterns)

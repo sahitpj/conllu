@@ -63,13 +63,19 @@ class TokenList(list):
                     if flag == 0:
                         flag = 1
                     stack.append(matches.group(2))
+
+                    if stack[-1][-1] == '.':
+                        stack[-1] = stack[-1][:-1]
+                        noun_chunks.append('_'.join(['NP'] + stack))
+                        noun_chunks.append('.')
+                        flag = 0
+                        stack = []
                 else:
                     if flag == 1:
                         noun_chunks.append('_'.join(['NP'] + stack))
                         stack = []
                         flag = 0
                     try:
-
                         noun_chunks.append(matches.group(2))
                     except:
                         noun_chunks.append('.')
