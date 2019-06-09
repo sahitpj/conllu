@@ -48,8 +48,9 @@ class TokenList(list):
             else:
                 self.metadata = [self.metadata, iterable.metadata]
 
-    def get_noun_chunks(self):
+    def get_noun_chunks(self, subject):
         NP = ['NN', 'NNS', 'NNP', 'NNPS']
+        AJ = ['JJ', 'JJR', 'JJS']
         if len(self) > 0 and isinstance(self[0], OrderedDict):
             annotated_sentence = list()
             for word in self:
@@ -58,7 +59,7 @@ class TokenList(list):
             noun_chunks = []
             stack = []
             for i in annotated_sentence:
-                matches = re.search(r'(\w+)_([\w.,]+)', i)
+                matches = re.search(r'([\w.,]+)_([\w.,]+)', i)
                 if matches and matches.group(1) in NP:
                     if flag == 0:
                         flag = 1
@@ -76,9 +77,20 @@ class TokenList(list):
                         stack = []
                         flag = 0
                     try:
-                        noun_chunks.append(matches.group(2))
+                        if matches.group(2) in ['.', ';', ':', ',']:
+                            noun_chunks.append(matches.group(1))
+                        elif matches.group(1) == 'CD':
+                            noun_chunks.append(i)
+                        elif matches.group(1) in AJ:
+                            noun_chunks.append('AJ_' + matches.group(2))
+                        elif matches.group(1) == 'PRP':
+                            noun_chunks.append('NP_' + subject)
+                        else:
+                            noun_chunks.append(matches.group(2))
                     except:
-                        noun_chunks.append('.')
+                        noun_chunks.append(',')
+
+                
             return ' '.join(noun_chunks)
         else:
             raise ParseException("Can't create noun chuncks for a group of sentences")
