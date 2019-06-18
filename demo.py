@@ -54,40 +54,42 @@ test3 = [
     "Himachal_Pradesh.conll"
 ]
 
-h = HearstPatterns(semi=True)
-count = 0 
-# results = open('test.txt', 'w')
-start = time.time()
-for conll_file in test3:
-    # data_file = open(conll_data_path + conll_file, "r", encoding="utf-8")
-    # tokenList = parse_single(data_file)
-    # sentence_tokenList = tokenList[0]
-    # # # print(conll_data_path + conll_file)
-    # print(sentence_tokenList.get_noun_chunks(conll_file[:-6]))
-    # count += 1
-    try:
-        hearst_patterns = h.find_hearstpatterns(conll_data_path + conll_file, conll_file[:-6])
-        print(hearst_patterns)
-        # print('\n\n')
-        # results.write(conll_file + ' :- ' + str(hearst_patterns)+'\n')
-    except:
-        None
-end = time.time()
-print(count)
-# results.close()
-    # print(sentence_tokenList.get_noun_chunks())
+# h = HearstPatterns(semi=True)
+# count = 0 
+# # results = open('test.txt', 'w')
+# start = time.time()
+# for conll_file in test3:
+#     # data_file = open(conll_data_path + conll_file, "r", encoding="utf-8")
+#     # tokenList = parse_single(data_file)
+#     # sentence_tokenList = tokenList[0]
+#     # # # print(conll_data_path + conll_file)
+#     # print(sentence_tokenList.get_noun_chunks(conll_file[:-6]))
+#     # count += 1
+#     try:
+#         hearst_patterns = h.find_hearstpatterns(conll_data_path + conll_file, conll_file[:-6])
+#         print(hearst_patterns)
+#         # print('\n\n')
+#         # results.write(conll_file + ' :- ' + str(hearst_patterns)+'\n')
+#     except:
+#         None
+# end = time.time()
+# print(count)
+# # results.close()
+#     # print(sentence_tokenList.get_noun_chunks())
 
-print("time taken  - ", end-start)
+# print("time taken  - ", end-start)
 
-print("\n\n\n")
+# print("\n\n\n")
 
 
-for conll_file in test3:
+for conll_file in ["Berkeley%2C_California.conll"]:
     data_file = open(conll_data_path + conll_file, "r", encoding="utf-8")
     tokenList = parse_single(data_file)
     sentence_tokenList = tokenList[0]
     # # # print(conll_data_path + conll_file)
     print(sentence_tokenList.get_noun_chunks(conll_file[:-6]))
+    print("")
+    sentence_tokenList.to_tree().print_tree()
     # count += 1
     # try:
     #     hearst_patterns = h.find_hearstpatterns(conll_data_path + conll_file, conll_file[:-6])
